@@ -140,5 +140,23 @@ class PGAdapter:
         """.format(id))
         return result[0][0]
     
+    # def clear_liked_genres(self, id):
+    #     self.query("""
+    #         DELETE FROM users_genres_likes
+    #         WHERE user_id = {}           
+    #     """.format(id))
+
+    def clear_liked_artists(self, id):
+        self.query("""
+            DELETE FROM users_artists_likes
+            WHERE user_id = {}           
+        """.format(id))
+
+    def clear_liked_songs(self, id):
+        self.query("""
+            DELETE FROM users_tracks_likes
+            WHERE user_id = {}           
+        """.format(id))
+    
     def _sql_seq(self, iterable):
         return "({})".format(', '.join(map(str, iterable)))
