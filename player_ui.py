@@ -1,6 +1,6 @@
 from PyQt6.QtWidgets import (QApplication, QMainWindow, QWidget, QVBoxLayout, 
                              QPushButton, QListWidget, QLabel, QStackedLayout,
-                             QListWidgetItem, QHBoxLayout
+                             QListWidgetItem, QHBoxLayout, QGroupBox, QCheckBox
                             )
 from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QIcon, QPixmap
@@ -9,7 +9,7 @@ from recommendation import Recommendation
 
 from widgets.track_widget import TrackWidget
 from widgets.genre_widget import GenreWidget
-from artist_widget import ArtistWidget
+from widgets.artist_widget import ArtistWidget
 from widgets.welcome_song_widget import WelcomeSongWidget
 
 from collections import OrderedDict
@@ -28,7 +28,7 @@ class MiniPlayerUI(QMainWindow):
         self.setWindowTitle("Мини-Плеер [{}]".format(user_name))
         self.user_id = user_id
         self.user_name = user_name
-        self.resize(400, 350)
+        self.resize(400, 400)
 
 
         # Инициализация страниц
@@ -96,12 +96,26 @@ class MiniPlayerUI(QMainWindow):
         self.songs_list.setFixedHeight(TrackWidget('', '', '', 1, 1).sizeHint().height() * 7)
         self.songs_list.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
 
+        # Выбор настроения
+        moods = self.db.moods()
+        self.mood_layout = QVBoxLayout()
+        self.mood_group = QGroupBox()
+        self.mood_buttons = [QCheckBox(mood) for mood in moods]
+        for button in self.mood_buttons:
+            self.mood_layout.addWidget(button)
+        self.mood_group.setLayout(self.mood_layout)
+        self.mood_group.setTitle("Настроение")
+        
+
         # Кнопка для перехода на вторую страницу
         self.switch_page_button = QPushButton("Перейти на страницу библиотеки")
         self.switch_page_button.clicked.connect(self.switch_page)
 
 
         self.recommendations_layout.addWidget(self.create_playlist_button, 0, Qt.AlignmentFlag.AlignHCenter)  # Выравнивание по центру
+
+        self.recommendations_layout.addWidget(self.mood_group)
+
         # self.recommendations_layout.addStretch()  # Добавить растяжитель
         self.recommendations_layout.addWidget(self.songs_list)
         self.recommendations_layout.addWidget(self.switch_page_button)
@@ -208,7 +222,8 @@ class MiniPlayerUI(QMainWindow):
     def create_playlist(self):
         # Обработчик для кнопки создания плейлиста
         # Определите здесь логику создания плейлиста и добавления элементов в список
-        recommendator = Recommendation()
+        moods = self.get_mood()
+        recommendator = Recommendation(moods)
         rec_ids = recommendator.recommend_playlist(self.user_id, 7)
         songs = self.db.tracks_by_ids(rec_ids)
         self.songs_list.clear()
@@ -225,7 +240,7 @@ class MiniPlayerUI(QMainWindow):
 
     def switch_page(self):
         current_index = self.layout.currentIndex()
-        new_index = 1 if current_index == 0 else 0  # Вычисляем индекс новой страницы
+        new_index = 3 if current_index == 4 else 4  # Вычисляем индекс новой страницы
         self.layout.setCurrentIndex(new_index)  # Устанавливаем новую страницу активной
 
 
@@ -295,3 +310,6 @@ class MiniPlayerUI(QMainWindow):
     def back_page(self):
         cur_index = self.layout.currentIndex()
         self.layout.setCurrentIndex(cur_index - 1)
+
+    def get_mood(self):
+        return [button.text() for button in self.mood_buttons if button.isChecked()]

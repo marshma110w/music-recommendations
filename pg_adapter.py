@@ -88,7 +88,7 @@ class PGAdapter:
             SELECT a.name, g.name, a.id
             FROM artists a JOIN genres g ON a.genre_id = g.id
             WHERE g.id IN {}
-        """.format(self._sql_seq(genres_ids)))
+        """.format(self._int_seq(genres_ids)))
     
     def tracks_by_artists(self, artists_ids):
         return self.query("""
@@ -97,7 +97,7 @@ class PGAdapter:
                 JOIN artists a ON a.id = t.artist_id
                 JOIN genres g ON g.id = t.genre_id 
                 WHERE a.id in {}
-        """.format(self._sql_seq(artists_ids)))
+        """.format(self._int_seq(artists_ids)))
     
     def users(self):
         return self.query("""
@@ -157,6 +157,24 @@ class PGAdapter:
             DELETE FROM users_tracks_likes
             WHERE user_id = {}           
         """.format(id))
+
+    def moods(self):
+        result = self.query("""
+            SELECT DISTINCT mood FROM tracks                    
+        """)
+        return [row[0] for row in result]
     
-    def _sql_seq(self, iterable):
+    def mood_by_id(self, id):
+        result = self.query("""
+            SELECT mood FROM tracks WHERE id = {}                    
+        """.format(id))
+
+        return result[0][0]
+    
+    def _int_seq(self, iterable):
         return "({})".format(', '.join(map(str, iterable)))
+    
+    def _str_seq(self, iterable):
+        return "({})".format(', '.join("'{}'".format(x) for x in iterable))
+    
+

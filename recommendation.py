@@ -5,8 +5,10 @@ import ipdb
 
 class Recommendation:
 
-    def __init__(self):
+    def __init__(self, moods=[]):
         self.db = PGAdapter()
+
+        self.moods = moods
 
         self.MAX_CLUSTERS = 5
 
@@ -97,12 +99,13 @@ class Recommendation:
     
     def recommend_playlist(self, customer, count):
         res = []
-        for _ in range(count):
+        while len(res) < count:
             song = self.make_reccomendation(customer)
-            res.append(song + 1)
             self.database[customer][song] = 1
+            song_id = song + 1
+            if self.db.mood_by_id(song_id) in self.moods or not self.moods:
+                res.append(song + 1)
         return res
-
 
     def make_reccomendation(self, customer):
         best_song = -1
