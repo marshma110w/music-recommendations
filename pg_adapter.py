@@ -105,16 +105,40 @@ class PGAdapter:
             FROM users
         """)
     
-    def create_user(self, login):
+    def create_user(self, login, password):
         self.query("""
-            INSERT INTO users (login) VALUES ('{}')
-        """.format(login))
+            INSERT INTO users (login, password) VALUES ('{}', '{}')
+        """.format(login, password))
 
         id = self.query("""
             SELECT id FROM users
             WHERE login = '{}'                
         """.format(login))
         return id[0][0]
+    
+    def user_exists(self, login):
+        result = self.query("""
+            SELECT 1 FROM users WHERE login = '{}'
+        """.format(login))
+        return bool(result)
+    
+    def authenticate(self, login, password):
+        result = self.query("""
+            SELECT 1 FROM users WHERE login = '{}' AND password = '{}'                    
+        """.format(login, password))
+        return bool(result)
+    
+    def id_by_login(self, login):
+        result = self.query("""
+            SELECT id FROM users WHERE login = '{}'                    
+        """.format(login))
+        return result[0][0]
+    
+    def login_by_id(self, id):
+        result = self.query("""
+            SELECT login FROM users WHERE id = {}                    
+        """.format(id))
+        return result[0][0]
     
     def _sql_seq(self, iterable):
         return "({})".format(', '.join(map(str, iterable)))

@@ -29,7 +29,8 @@ CREATE TABLE tracks (
 
 CREATE TABLE users (
     id SERIAL PRIMARY KEY,
-    login VARCHAR(255) NOT NULL UNIQUE
+    login VARCHAR(255) NOT NULL UNIQUE,
+    password VARCHAR(255) NOT NULL
 );
 
 CREATE TABLE users_tracks_likes (
@@ -311,14 +312,14 @@ UPDATE tracks SET external_id = 'kOkQ4T5WO9E' WHERE name = 'This Is What You Cam
 UPDATE tracks SET external_id = 'J9NQFACZYEU' WHERE name = 'Outside';
 UPDATE tracks SET external_id = 'EgqUJOudrcM' WHERE name = 'How Deep Is Your Love';
 
-INSERT INTO users (login) VALUES
-('abc'),
-('bot1'),
-('bot2'),
-('bot3'),
-('bot4'),
-('bot5'),
-('bot6');
+INSERT INTO users (login, password) VALUES
+('abc', 'abc'),
+('bot1', 'bot1'),
+('bot2', 'bot2'),
+('bot3', 'bot3'),
+('bot4', 'bot4'),
+('bot5', 'bot5'),
+('bot6', 'bot6');
 
 INSERT INTO users_tracks_likes (user_id, track_id) VALUES
 (1, 1),

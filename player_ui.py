@@ -7,23 +7,25 @@ from PyQt6.QtGui import QIcon, QPixmap
 from pg_adapter import PGAdapter
 from recommendation import Recommendation
 
-from track_widget import TrackWidget
-from genre_widget import GenreWidget
+from widgets.track_widget import TrackWidget
+from widgets.genre_widget import GenreWidget
 from artist_widget import ArtistWidget
-from welcome_song_widget import WelcomeSongWidget
+from widgets.welcome_song_widget import WelcomeSongWidget
 
 import ipdb
 
 class MiniPlayerUI(QMainWindow):
-    def __init__(self, user_name='abc', user_id=1):
+    def __init__(self, user_id):
         super().__init__()
+
+        self.db = PGAdapter()
+        user_name = self.db.login_by_id(user_id)
 
         self.setWindowTitle("Мини-Плеер [{}]".format(user_name))
         self.user_id = user_id
         self.user_name = user_name
-        self.resize(400, 300)
+        self.resize(400, 350)
 
-        self.db = PGAdapter()
 
         # Инициализация страниц
         library_page = self.library_page_init()
@@ -107,11 +109,13 @@ class MiniPlayerUI(QMainWindow):
     
     def genre_selection_page_init(self):
         self.genre_selection_layout = QVBoxLayout()
+        self.genre_selection_title = QLabel("Выберете любимые жанры:")
         self.genres_list = QListWidget()
         self.genres_submit_button = QPushButton('К артистам')
         self.genres_submit_button.clicked.connect(self.to_artists_page)
         self.fill_genres()
 
+        self.genre_selection_layout.addWidget(self.genre_selection_title)
         self.genre_selection_layout.addWidget(self.genres_list)
         self.genre_selection_layout.addWidget(self.genres_submit_button)
         self.genre_selection_page = QWidget()
@@ -121,10 +125,12 @@ class MiniPlayerUI(QMainWindow):
     
     def artist_selection_page_init(self):
         self.artist_selection_layout = QVBoxLayout()
+        self.artist_selection_title = QLabel("Выберете любимых артистов:")
         self.artists_list = QListWidget()
         self.artists_submit_button = QPushButton('К песням')
         self.artists_submit_button.clicked.connect(self.to_songs_page)
 
+        self.artist_selection_layout.addWidget(self.artist_selection_title)
         self.artist_selection_layout.addWidget(self.artists_list)
         self.artist_selection_layout.addWidget(self.artists_submit_button)
         self.artist_selection_page = QWidget()
@@ -135,10 +141,12 @@ class MiniPlayerUI(QMainWindow):
     
     def welcome_songs_selection_page_init(self):
         self.welcome_songs_selection_layout = QVBoxLayout()
+        self.welcome_songs_selection_title = QLabel("Выберете любимые треки:")
         self.welcome_songs_list = QListWidget()
         self.welcome_songs_submit_button = QPushButton("Добавить")
         self.welcome_songs_submit_button.clicked.connect(self.to_library)
 
+        self.welcome_songs_selection_layout.addWidget(self.welcome_songs_selection_title)
         self.welcome_songs_selection_layout.addWidget(self.welcome_songs_list)
         self.welcome_songs_selection_layout.addWidget(self.welcome_songs_submit_button)
         self.welcome_songs_selection_page = QWidget()
