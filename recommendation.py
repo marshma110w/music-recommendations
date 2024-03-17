@@ -96,14 +96,28 @@ class Recommendation:
                 break
         return 0
     
+    #  Construct playlist of recommendated songs
     def recommend_playlist(self, customer, count):
+        user_id = customer + 1
         res = []
         while len(res) < count:
             song = self.make_reccomendation(customer)
             self.database[customer][song] = 1
             song_id = song + 1
-            if self.db.mood_by_id(song_id) in self.moods or not self.moods:
-                res.append(song + 1)
+
+            # Skip if song already in recommendation playlist
+            if song_id in res:
+                continue
+
+            # Skip if mood is wrong
+            if self.moods and self.db.mood_by_id(song_id) not in self.moods:
+                continue
+            
+            # Skip if song is already liked
+            if self.db.is_liked(song_id, user_id):
+                continue
+
+            res.append(song_id)
         return res
 
     def make_reccomendation(self, customer):

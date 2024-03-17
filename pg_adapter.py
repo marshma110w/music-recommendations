@@ -196,6 +196,13 @@ class PGAdapter:
             DELETE FROM users_tracks_likes
             WHERE user_id = {} AND track_id = {}           
         """.format(user_id, song_id))
+
+    def is_liked(self, song_id, user_id):
+        result = self.query("""
+            SELECT 1 FROM users_tracks_likes
+            WHERE track_id = {} AND user_id = {}                 
+        """.format(song_id, user_id))
+        return bool(result)
     
     def _int_seq(self, iterable):
         return "({})".format(', '.join(map(str, iterable)))

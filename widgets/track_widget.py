@@ -31,23 +31,16 @@ class TrackWidget(QWidget):
 
     def config_buttons(self, options):
         for option in options:
-
-            if option == "delete":
-                self.delete_button = QPushButton("x")
-                self.buttons.append(self.delete_button)
-            
             if option == "like":
                 self.like_button = LikeButton(self.id, self.user_id, self.liked)
                 self.buttons.append(self.like_button)
-            
-            if option == "dislike":
-                self.dislike_button = QPushButton("dislike")
-                self.buttons.append(self.dislike_button)
 
             if option == "play":
-                self.play_button = QPushButton("play")
+                self.play_button = QPushButton("►")
                 self.buttons.append(self.play_button)
                 self.play_button.clicked.connect(self.play)
 
     def play(self):
-        webopen("https://www.youtube.com/watch?v={}".format(self.ext_id))
+        href = "https://www.youtube.com/watch?v={}".format(self.ext_id)
+        print(href)
+        webopen(href)
