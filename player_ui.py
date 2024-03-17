@@ -90,7 +90,7 @@ class MiniPlayerUI(QMainWindow):
          # Список песен
         self.songs_list = QListWidget()
         # self.songs_list.setVisible(False)  # Список песен изначально невидим
-        self.songs_list.setFixedHeight(TrackWidget('', '', '', 1, 1, []).sizeHint().height() * 7)
+        self.songs_list.setFixedHeight(TrackWidget('', '', '', 1, 1, 1, []).sizeHint().height() * 7)
         self.songs_list.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
 
         # Выбор настроения
@@ -226,7 +226,7 @@ class MiniPlayerUI(QMainWindow):
         self.songs_list.clear()
         for song in songs:
             list_item = QListWidgetItem(self.songs_list)
-            track = TrackWidget(song[0], song[1], song[2], song[4], self.user_id, ["play", "like", "dislike"])
+            track = TrackWidget(song[0], song[1], song[2], song[4], song[3], self.user_id, ["play", "like", "dislike"])
             list_item.setSizeHint(track.sizeHint())
             self.songs_list.setItemWidget(list_item, track)
 
@@ -294,7 +294,7 @@ class MiniPlayerUI(QMainWindow):
         records = self.db.get_library(login)
         for record in records:
             list_item = QListWidgetItem(self.library_songs_list)
-            track = TrackWidget(record[0], record[1], record[2], record[4], login, ["delete", "like", "dislike", "play"])
+            track = TrackWidget(record[0], record[1], record[2], record[4], record[3], login, ["delete", "like", "dislike", "play"])
             list_item.setSizeHint(track.sizeHint())
 
             self.library_songs_list.setItemWidget(list_item, track)
