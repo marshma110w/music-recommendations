@@ -1,19 +1,21 @@
 from PyQt6.QtWidgets import QWidget, QLabel, QPushButton, QHBoxLayout
+from widgets.like_button_widget import LikeButton
 
 from webbrowser import open as webopen
 
 class TrackWidget(QWidget):
-    def __init__(self, track, author, genre, id, ext_id, user_id, button_options):
+    def __init__(self, track, author, genre, id, ext_id, user_id, liked, button_options):
         super().__init__()
-
-        self.buttons = []
-        self.config_buttons(button_options)
 
         self.id = id
         self.ext_id = ext_id
         self.user_id = user_id
+        self.liked = liked
 
         self.label = QLabel('{} - {} ({})'.format(track, author, genre))
+
+        self.buttons = []
+        self.config_buttons(button_options)
 
         self.layout = QHBoxLayout()
         self.layout.addWidget(self.label)
@@ -35,7 +37,7 @@ class TrackWidget(QWidget):
                 self.buttons.append(self.delete_button)
             
             if option == "like":
-                self.like_button = QPushButton("like")
+                self.like_button = LikeButton(self.id, self.user_id, self.liked)
                 self.buttons.append(self.like_button)
             
             if option == "dislike":

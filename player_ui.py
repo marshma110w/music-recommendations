@@ -46,9 +46,9 @@ class MiniPlayerUI(QMainWindow):
         
 
         if self.db.get_library(self.user_id):
-            self.layout.setCurrentIndex(3)
+            self.set_page(3)
         else:
-            self.layout.setCurrentIndex(0)
+            self.set_page(0)
 
 
         # Установить виджет с основным макетом в качестве центрального виджета
@@ -90,7 +90,7 @@ class MiniPlayerUI(QMainWindow):
          # Список песен
         self.songs_list = QListWidget()
         # self.songs_list.setVisible(False)  # Список песен изначально невидим
-        self.songs_list.setFixedHeight(TrackWidget('', '', '', 1, 1, 1, []).sizeHint().height() * 7)
+        self.songs_list.setFixedHeight(TrackWidget('', '', '', 1, 1, 1, True, []).sizeHint().height() * 7)
         self.songs_list.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
 
         # Выбор настроения
@@ -222,11 +222,11 @@ class MiniPlayerUI(QMainWindow):
         moods = self.get_mood()
         recommendator = Recommendation(moods)
         rec_ids = recommendator.recommend_playlist(self.user_id - 1, 7)
-        songs = self.db.tracks_by_ids(rec_ids)
+        songs = self.db.tracks_by_ids_for_user(rec_ids, self.user_id)
         self.songs_list.clear()
         for song in songs:
             list_item = QListWidgetItem(self.songs_list)
-            track = TrackWidget(song[0], song[1], song[2], song[4], song[3], self.user_id, ["play", "like", "dislike"])
+            track = TrackWidget(song[0], song[1], song[2], song[4], song[3], self.user_id, song[5], ["play", "like", "dislike"])
             list_item.setSizeHint(track.sizeHint())
             self.songs_list.setItemWidget(list_item, track)
 
@@ -238,7 +238,7 @@ class MiniPlayerUI(QMainWindow):
     def switch_page(self):
         current_index = self.layout.currentIndex()
         new_index = 3 if current_index == 4 else 4  # Вычисляем индекс новой страницы
-        self.layout.setCurrentIndex(new_index)  # Устанавливаем новую страницу активной
+        self.set_page(new_index)  # Устанавливаем новую страницу активной
 
 
     def to_artists_page(self):
@@ -252,7 +252,7 @@ class MiniPlayerUI(QMainWindow):
             self.fill_artists(self.selected_genres)
             # self.db.clear_liked_genres(self.user_id)
             # like genres
-            self.layout.setCurrentIndex(1)
+            self.set_page(1)
 
     def to_songs_page(self):
         self.selected_artists = []
@@ -265,7 +265,7 @@ class MiniPlayerUI(QMainWindow):
             self.fill_songs_to_select(self.selected_artists)
             self.db.clear_liked_artists(self.user_id)
             # like artists
-            self.layout.setCurrentIndex(2)
+            self.set_page(2)
 
     def to_library(self):
         self.selected_songs = []
@@ -278,7 +278,7 @@ class MiniPlayerUI(QMainWindow):
             self.db.clear_liked_songs(self.user_id)
             self.db.like_songs(self.user_id, self.selected_songs)
             self.populate_library(self.user_id)
-            self.layout.setCurrentIndex(3)
+            self.set_page(3)
 
 
     def remove_song(self, title):
@@ -291,10 +291,11 @@ class MiniPlayerUI(QMainWindow):
             self.library_songs_list.takeItem(row)
 
     def populate_library(self, login):
+        self.library_songs_list.clear()
         records = self.db.get_library(login)
         for record in records:
             list_item = QListWidgetItem(self.library_songs_list)
-            track = TrackWidget(record[0], record[1], record[2], record[4], record[3], login, ["delete", "like", "dislike", "play"])
+            track = TrackWidget(record[0], record[1], record[2], record[4], record[3], self.user_id, True, ["delete", "like", "dislike", "play"])
             list_item.setSizeHint(track.sizeHint())
 
             self.library_songs_list.setItemWidget(list_item, track)
@@ -310,3 +311,9 @@ class MiniPlayerUI(QMainWindow):
 
     def get_mood(self):
         return [button.text() for button in self.mood_buttons if button.isChecked()]
+
+    def set_page(self, index):
+        if index == 3:
+            self.populate_library(self.user_id)
+
+        self.layout.setCurrentIndex(index)

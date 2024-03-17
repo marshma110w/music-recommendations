@@ -27,6 +27,7 @@ class PGAdapter:
             records = []
         self.connection.commit()
         cursor.close()
+        self.connection.commit()
         return records
     
     def get_library(self, user_id):
@@ -36,8 +37,7 @@ class PGAdapter:
                 JOIN artists a ON a.id = t.artist_id
                 JOIN genres g ON g.id = t.genre_id 
                 JOIN users_tracks_likes l ON l.track_id = t.id
-                JOIN users u ON l.user_id = u.id
-                WHERE u.id = '{}'
+                WHERE l.user_id = '{}'
         """.format(user_id))
     
     def songs_count(self):
@@ -68,6 +68,20 @@ class PGAdapter:
                 JOIN genres g ON g.id = t.genre_id 
             WHERE t.id IN {}
         """.format(tuple(ids)))
+    
+
+    def tracks_by_ids_for_user(self, ids, user_id):
+        return self.query("""
+            SELECT t.name, a.name, g.name, t.external_id, t.id, l.user_id IS NOT NULL
+            FROM tracks t
+                JOIN artists a ON a.id = t.artist_id
+                JOIN genres g ON g.id = t.genre_id 
+            LEFT JOIN (
+                SELECT user_id, track_id FROM users_tracks_likes WHERE user_id = {}
+            ) AS l
+                ON t.id = l.track_id
+            WHERE t.id IN {}               
+        """.format(user_id, tuple(ids)))
 
     def genres(self):
         return self.query("""
@@ -170,6 +184,18 @@ class PGAdapter:
         """.format(id))
 
         return result[0][0]
+    
+    def like(self, song_id, user_id):
+        self.query("""
+            INSERT INTO users_tracks_likes (track_id, user_id)
+            VALUES ({}, {})
+        """.format(song_id, user_id))
+
+    def unlike(self, song_id, user_id):
+        self.query("""
+            DELETE FROM users_tracks_likes
+            WHERE user_id = {} AND track_id = {}           
+        """.format(user_id, song_id))
     
     def _int_seq(self, iterable):
         return "({})".format(', '.join(map(str, iterable)))
