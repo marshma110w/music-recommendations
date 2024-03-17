@@ -14,9 +14,6 @@ from widgets.welcome_song_widget import WelcomeSongWidget
 
 from collections import OrderedDict
 
-import ipdb
-
-
 
 class MiniPlayerUI(QMainWindow):
     def __init__(self, user_id):
@@ -28,7 +25,7 @@ class MiniPlayerUI(QMainWindow):
         self.setWindowTitle("Мини-Плеер [{}]".format(user_name))
         self.user_id = user_id
         self.user_name = user_name
-        self.resize(400, 400)
+        self.resize(800, 400)
 
 
         # Инициализация страниц
@@ -93,7 +90,7 @@ class MiniPlayerUI(QMainWindow):
          # Список песен
         self.songs_list = QListWidget()
         # self.songs_list.setVisible(False)  # Список песен изначально невидим
-        self.songs_list.setFixedHeight(TrackWidget('', '', '', 1, 1).sizeHint().height() * 7)
+        self.songs_list.setFixedHeight(TrackWidget('', '', '', 1, 1, []).sizeHint().height() * 7)
         self.songs_list.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
 
         # Выбор настроения
@@ -224,12 +221,12 @@ class MiniPlayerUI(QMainWindow):
         # Определите здесь логику создания плейлиста и добавления элементов в список
         moods = self.get_mood()
         recommendator = Recommendation(moods)
-        rec_ids = recommendator.recommend_playlist(self.user_id, 7)
+        rec_ids = recommendator.recommend_playlist(self.user_id - 1, 7)
         songs = self.db.tracks_by_ids(rec_ids)
         self.songs_list.clear()
         for song in songs:
             list_item = QListWidgetItem(self.songs_list)
-            track = TrackWidget(song[0], song[1], song[2], song[4], self.user_id)
+            track = TrackWidget(song[0], song[1], song[2], song[4], self.user_id, ["play", "like", "dislike"])
             list_item.setSizeHint(track.sizeHint())
             self.songs_list.setItemWidget(list_item, track)
 
@@ -297,7 +294,7 @@ class MiniPlayerUI(QMainWindow):
         records = self.db.get_library(login)
         for record in records:
             list_item = QListWidgetItem(self.library_songs_list)
-            track = TrackWidget(record[0], record[1], record[2], record[4], login)
+            track = TrackWidget(record[0], record[1], record[2], record[4], login, ["delete", "like", "dislike", "play"])
             list_item.setSizeHint(track.sizeHint())
 
             self.library_songs_list.setItemWidget(list_item, track)

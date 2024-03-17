@@ -1,7 +1,6 @@
 from pg_adapter import PGAdapter
 from random import randint
 
-import ipdb
 
 class Recommendation:
 

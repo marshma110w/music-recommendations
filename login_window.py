@@ -7,7 +7,6 @@ from pg_adapter import PGAdapter
 from player_ui import MiniPlayerUI
 import re
 
-import ipdb
 
 class LoginWindow(QMainWindow):
     def __init__(self):
