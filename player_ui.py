@@ -16,7 +16,7 @@ from widgets.welcome_song_widget import WelcomeSongWidget
 class MiniPlayerUI(QMainWindow):
     def __init__(self, user_id):
         super().__init__()
-
+        self.setStyleSheet("background-color: darkkhaki; color: black")
         self.db = PGAdapter()
         user_name = self.db.login_by_id(user_id)
 
@@ -62,6 +62,7 @@ class MiniPlayerUI(QMainWindow):
 
         # Кнопка для перехода на первую страницу
         self.switch_to_recommendations_button = QPushButton("Перейти на страницу рекомендаций")
+        self.switch_to_recommendations_button.setStyleSheet("background-color: darkorange")
         self.switch_to_recommendations_button.clicked.connect(self.switch_page)
 
         # Добавляем элементы на макет страницы библиотеки
@@ -75,12 +76,8 @@ class MiniPlayerUI(QMainWindow):
     def recommendation_page_init(self):
         self.recommendations_layout = QVBoxLayout()
 
-        self.create_playlist_button = QPushButton("")
-        self.create_playlist_button.setStyleSheet("QPushButton {"
-                                                  "  border-radius: 50px;"
-                                                  "  background-color: #89CFF0;"
-                                                  "  border-style: solid;"
-                                                  "}")
+        self.create_playlist_button = QPushButton("Моя волна ♬")
+        self.create_playlist_button.setStyleSheet("background-color: darkorange; border-radius: 50px; border-style: solid")
         self.create_playlist_button.setFixedSize(100, 100)
         self.create_playlist_button.clicked.connect(self.create_playlist)
 
@@ -103,6 +100,7 @@ class MiniPlayerUI(QMainWindow):
 
         # Кнопка для перехода на вторую страницу
         self.switch_page_button = QPushButton("Перейти на страницу библиотеки")
+        self.switch_page_button.setStyleSheet("background-color: darkorange")
         self.switch_page_button.clicked.connect(self.switch_page)
 
 
@@ -123,9 +121,10 @@ class MiniPlayerUI(QMainWindow):
     
     def genre_selection_page_init(self):
         self.genre_selection_layout = QVBoxLayout()
-        self.genre_selection_title = QLabel("Выберете любимые жанры:")
+        self.genre_selection_title = QLabel("Выберите любимые жанры:")
         self.genres_list = QListWidget()
         self.genres_submit_button = QPushButton('К артистам')
+        self.genres_submit_button.setStyleSheet("background-color: darkorange")
         self.genres_submit_button.clicked.connect(self.to_artists_page)
         self.fill_genres()
 
@@ -139,11 +138,12 @@ class MiniPlayerUI(QMainWindow):
     
     def artist_selection_page_init(self):
         self.artist_selection_layout = QVBoxLayout()
-        self.artist_selection_title = QLabel("Выберете любимых артистов:")
+        self.artist_selection_title = QLabel("Выберите любимых артистов:")
         self.artist_selection_back_button = self.back_button()
         self.artist_selection_title_layout = QHBoxLayout()
         self.artists_list = QListWidget()
         self.artists_submit_button = QPushButton('К песням')
+        self.artists_submit_button.setStyleSheet("background-color: darkorange")
         self.artists_submit_button.clicked.connect(self.to_songs_page)
 
         self.artist_selection_title_layout.addWidget(self.artist_selection_title)
@@ -160,10 +160,11 @@ class MiniPlayerUI(QMainWindow):
     
     def welcome_songs_selection_page_init(self):
         self.welcome_songs_selection_layout = QVBoxLayout()
-        self.welcome_songs_selection_title = QLabel("Выберете любимые треки:")
+        self.welcome_songs_selection_title = QLabel("Выберите любимые треки:")
         self.welcome_songs_selection_back_button = self.back_button()
         self.welcome_songs_list = QListWidget()
         self.welcome_songs_submit_button = QPushButton("Добавить")
+        self.welcome_songs_submit_button.setStyleSheet("background-color: darkorange")
         self.welcome_songs_submit_button.clicked.connect(self.to_library)
 
         self.welcome_songs_selection_title_layout = QHBoxLayout()
@@ -209,9 +210,9 @@ class MiniPlayerUI(QMainWindow):
 
     def make_icon(self, image_path):
         # Создание иконки для кнопки из изображения
+        image_path = '/home/greeengy/projects/music-recommendations/play.jpeg'
         pixmap = QPixmap(image_path)
         return QIcon(pixmap.scaled(80, 80, Qt.AspectRatioMode.KeepAspectRatio, Qt.TransformationMode.SmoothTransformation))
-
 
     def create_playlist(self):
         # Обработчик для кнопки создания плейлиста
@@ -299,6 +300,7 @@ class MiniPlayerUI(QMainWindow):
 
     def back_button(self):
         back_button = QPushButton("Назад")
+        back_button.setStyleSheet("background-color: darkorange")
         back_button.clicked.connect(self.back_page)
         return back_button
 

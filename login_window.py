@@ -11,9 +11,10 @@ import re
 class LoginWindow(QMainWindow):
     def __init__(self):
         super().__init__()
-
+        self.setStyleSheet("background-color: darkkhaki")
         self.setWindowTitle("Авторизация")
-        self.resize(400, 100)
+
+        self.resize(600, 100)
 
         self.db = PGAdapter()
 
@@ -28,9 +29,13 @@ class LoginWindow(QMainWindow):
 
     def construct_login_page(self):
         self.auth_login_label = QLabel("Логин")
+        self.auth_login_label.setStyleSheet("color: black")
         self.auth_password_label = QLabel("Пароль")
+        self.auth_password_label.setStyleSheet("color: black")
         self.auth_login_input = QLineEdit()
+        self.auth_login_input.setStyleSheet("color: black; background-color: white")
         self.auth_password_input = QLineEdit()
+        self.auth_password_input.setStyleSheet("color: black; background-color: white")
         self.auth_login_layout = QHBoxLayout()
         self.auth_password_layout = QHBoxLayout()
         self.auth_login_layout.addWidget(self.auth_login_label)
@@ -42,6 +47,7 @@ class LoginWindow(QMainWindow):
         self.auth_login_input.setFixedWidth(200)
 
         self.login_button = QPushButton("Вход")
+        self.login_button.setStyleSheet("background-color: darkorange; color: black")
         self.register_link = QLabel(
             '<a href="#" style="text-decoration: none;">Регистрация</a>'
         )
@@ -74,7 +80,9 @@ class LoginWindow(QMainWindow):
 
         self.reg_login_layout = QHBoxLayout()
         self.reg_login_label = QLabel("Логин")
+        self.reg_login_label.setStyleSheet("color: black")
         self.reg_login_input = QLineEdit()
+        self.reg_login_input.setStyleSheet("color: black;background-color: white")
         self.reg_login_input.setFixedWidth(200)
         self.reg_login_layout.addWidget(self.reg_login_label)
         self.reg_login_layout.addStretch()
@@ -84,7 +92,9 @@ class LoginWindow(QMainWindow):
 
         self.reg_password_layout = QHBoxLayout()
         self.reg_password_label = QLabel("Пароль")
+        self.reg_password_label.setStyleSheet("color: black")
         self.reg_password_input = QLineEdit()
+        self.reg_password_input.setStyleSheet("color: black;background-color: white")
         self.reg_password_input.setFixedWidth(200)
         self.reg_password_layout.addWidget(self.reg_password_label)
         self.reg_password_layout.addStretch()
@@ -94,7 +104,9 @@ class LoginWindow(QMainWindow):
 
         self.reg_password2_layout = QHBoxLayout()
         self.reg_password2_label = QLabel("Подтверждение")
+        self.reg_password2_label.setStyleSheet("color: black")
         self.reg_password2_input = QLineEdit()
+        self.reg_password2_input.setStyleSheet("color: black;background-color: white")
         self.reg_password2_input.setFixedWidth(200)
         self.reg_password2_layout.addWidget(self.reg_password2_label)
         self.reg_password2_layout.addStretch()
@@ -103,6 +115,7 @@ class LoginWindow(QMainWindow):
         self.reg_layout.addLayout(self.reg_password2_layout)
 
         self.registration_button = QPushButton("Зарегистрироваться")
+        self.registration_button.setStyleSheet("background-color: darkorange; color: black")
         self.reg_layout.addWidget(self.registration_button)
         
         self.back_layout = QHBoxLayout()
