@@ -1,4 +1,4 @@
-import psycopg2
+import sqlite3
 
 class SqliteAdapter:
     _instance = None
@@ -9,25 +9,15 @@ class SqliteAdapter:
         return cls._instance
     
     def __init__(self):
-        self.connection = psycopg2.connect(
-            database = 'music',
-            user = 'music',
-            password = 'music',
-            host = '127.0.0.1',
-            port = '5432'
-        )
+        self.connection = sqlite3.connect("music.db")
 
     def query(self, q):
         print(q)
+        self.connection = sqlite3.connect("music.db")
         cursor = self.connection.cursor()
-        cursor.execute(q)
-        if 'SELECT' in q:
-            records = cursor.fetchall()
-        else:
-            records = []
+        records = list(cursor.execute(q))
         self.connection.commit()
-        cursor.close()
-        self.connection.commit()
+        self.connection.close()
         return records
     
     def get_library(self, user_id):

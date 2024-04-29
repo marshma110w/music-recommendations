@@ -4,7 +4,7 @@ from PyQt6.QtWidgets import (QApplication, QMainWindow, QWidget, QVBoxLayout,
                             )
 from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QIcon, QPixmap
-from pg_adapter import PGAdapter
+from sqlite_adapter import SqliteAdapter
 from recommendation import Recommendation
 
 from widgets.track_widget import TrackWidget
@@ -17,7 +17,7 @@ class MiniPlayerUI(QMainWindow):
     def __init__(self, user_id):
         super().__init__()
         self.setStyleSheet("background-color: darkkhaki; color: black")
-        self.db = PGAdapter()
+        self.db = SqliteAdapter()
         user_name = self.db.login_by_id(user_id)
 
         self.setWindowTitle("Мини-Плеер [{}]".format(user_name))

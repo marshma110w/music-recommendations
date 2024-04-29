@@ -1,5 +1,5 @@
 from PyQt6.QtWidgets import QWidget, QPushButton, QHBoxLayout
-from pg_adapter import PGAdapter
+from sqlite_adapter import SqliteAdapter
 
 
 class LikeButton(QWidget):
@@ -10,7 +10,7 @@ class LikeButton(QWidget):
     def __init__(self, song_id, user_id, liked):
         super().__init__()
 
-        self.db = PGAdapter()
+        self.db = SqliteAdapter()
 
         self.liked = liked
         self.song_id = song_id

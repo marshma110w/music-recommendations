@@ -1,24 +1,17 @@
-\c postgres;
-DROP DATABASE IF EXISTS music;
-
-CREATE DATABASE music;
-
-\c music;
-
 CREATE TABLE genres (
-    id SERIAL PRIMARY KEY,
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
     name VARCHAR(50) NOT NULL
 );
 
 CREATE TABLE artists (
-    id SERIAL PRIMARY KEY,
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
     name VARCHAR(255) NOT NULL,
     genre_id INT,
     FOREIGN KEY (genre_id) REFERENCES genres(id)
 );
 
 CREATE TABLE tracks (
-    id SERIAL PRIMARY KEY,
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
     name VARCHAR(255) NOT NULL,
     is_russian BOOLEAN NOT NULL DEFAULT false,
     mood VARCHAR(32),
@@ -30,13 +23,13 @@ CREATE TABLE tracks (
 );
 
 CREATE TABLE users (
-    id SERIAL PRIMARY KEY,
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
     login VARCHAR(255) NOT NULL UNIQUE,
     password VARCHAR(255) NOT NULL
 );
 
 CREATE TABLE users_tracks_likes (
-    id SERIAL PRIMARY KEY,
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
     user_id INT,
     track_id INT,
     FOREIGN KEY (user_id) REFERENCES users(id),
@@ -45,7 +38,7 @@ CREATE TABLE users_tracks_likes (
 );
 
 CREATE TABLE users_artists_likes (
-    id SERIAL PRIMARY KEY,
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
     user_id INT,
     artist_id INT,
     FOREIGN KEY (user_id) REFERENCES users(id),

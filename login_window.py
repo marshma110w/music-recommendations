@@ -3,7 +3,7 @@ from PyQt6.QtWidgets import (QApplication, QMainWindow, QWidget, QVBoxLayout,
                              QListWidgetItem, QHBoxLayout, QLineEdit, QMessageBox
                             )
 
-from pg_adapter import PGAdapter
+from sqlite_adapter import SqliteAdapter
 from player_ui import MiniPlayerUI
 import re
 
@@ -16,7 +16,7 @@ class LoginWindow(QMainWindow):
 
         self.resize(600, 100)
 
-        self.db = PGAdapter()
+        self.db = SqliteAdapter()
 
         self.layout = QStackedLayout()
         self.layout.addWidget(self.construct_login_page())

@@ -1,11 +1,11 @@
-from pg_adapter import PGAdapter
+from sqlite_adapter import SqliteAdapter
 from random import randint
 
 
 class Recommendation:
 
     def __init__(self, moods=[]):
-        self.db = PGAdapter()
+        self.db = SqliteAdapter()
 
         self.moods = moods
 
