@@ -121,6 +121,7 @@ class Recommendation:
         return res
 
     def make_reccomendation(self, customer):
+        self.perform()
         best_song = -1
         val = 0
 
