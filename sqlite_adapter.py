@@ -41,7 +41,8 @@ class SqliteAdapter:
         """)[0][0]
     
     def like_vectors(self):
-        lib = [[0 for i in range(self.songs_count())] for j in range(self.users_count())]
+        songs_count = self.songs_count()
+        lib = [[0 for i in range(songs_count)] for j in range(self.users_count())]
         result = self.query("""
             SELECT user_id, track_id
             FROM users_tracks_likes
