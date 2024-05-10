@@ -77,7 +77,7 @@ class MiniPlayerUI(QMainWindow):
         self.recommendations_layout = QVBoxLayout()
 
         self.create_playlist_button = QPushButton("Моя волна ♬")
-        self.create_playlist_button.setStyleSheet("background-color: darkorange; border-radius: 50px; border-style: solid")
+        self.create_playlist_button.setStyleSheet("background-color: darkorange; border-radius: 50px; border-style: solid; border-width: 5px")
         self.create_playlist_button.setFixedSize(100, 100)
         self.create_playlist_button.clicked.connect(self.create_playlist)
 
