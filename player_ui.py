@@ -184,6 +184,7 @@ class MiniPlayerUI(QMainWindow):
 
     def fill_genres(self):
         genres = self.db.genres()
+        self.genres_list.clear()
         for record in genres:
             list_item = QListWidgetItem(self.genres_list)
             genre = GenreWidget(record[0], record[1])
@@ -193,6 +194,7 @@ class MiniPlayerUI(QMainWindow):
 
     def fill_artists(self, genres_ids):
         artists = self.db.artists_by_genres(genres_ids)
+        self.artists_list.clear()
         for record in artists:
             list_item = QListWidgetItem(self.artists_list)
             artist = ArtistWidget(record[0], record[1], record[2])
@@ -201,6 +203,7 @@ class MiniPlayerUI(QMainWindow):
 
     def fill_songs_to_select(self, artists_ids):
         songs = self.db.tracks_by_artists(artists_ids)
+        self.welcome_songs_list.clear()
         for record in songs:
             list_item = QListWidgetItem(self.welcome_songs_list)
             song = WelcomeSongWidget(record[0], record[1], record[2], record[3], record[4])
