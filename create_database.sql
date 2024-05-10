@@ -49,10 +49,10 @@ CREATE TABLE users_artists_likes (
 
 
 INSERT INTO genres (name) VALUES 
-('Hip-hop/Rap'),
-('Pop'),
-('Rock'),
-('House');
+('Хип-хоп/Рэп'),
+('Поп'),
+('Рок'),
+('Хаус');
 
 
 INSERT INTO artists (name, genre_id) VALUES 
