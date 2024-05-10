@@ -1,10 +1,10 @@
 import sys
 from PyQt6.QtWidgets import QApplication
-from login_window import LoginWindow
+from window_resolver import WindowResolver
 
 # Запуск приложения
 if __name__ == "__main__":
     app = QApplication(sys.argv)
-    window = LoginWindow()
-    window.show()
+    resolver = WindowResolver()
+    resolver.activate_login()
     sys.exit(app.exec())

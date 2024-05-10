@@ -2,7 +2,7 @@ from PyQt6.QtWidgets import (QApplication, QMainWindow, QWidget, QVBoxLayout,
                              QPushButton, QListWidget, QLabel, QStackedLayout,
                              QListWidgetItem, QHBoxLayout, QGroupBox, QCheckBox
                             )
-from PyQt6.QtCore import Qt
+from PyQt6.QtCore import Qt, QSize
 from PyQt6.QtGui import QIcon, QPixmap
 from sqlite_adapter import SqliteAdapter
 from recommendation import Recommendation
@@ -12,15 +12,16 @@ from widgets.genre_widget import GenreWidget
 from widgets.artist_widget import ArtistWidget
 from widgets.welcome_song_widget import WelcomeSongWidget
 
-
 class MiniPlayerUI(QMainWindow):
-    def __init__(self, user_id):
+    def __init__(self, user_id, resolver):
         super().__init__()
         self.setStyleSheet("background-color: darkkhaki; color: black")
         self.db = SqliteAdapter()
         user_name = self.db.login_by_id(user_id)
 
         self.setWindowTitle("Мини-Плеер [{}]".format(user_name))
+
+        self.resolver = resolver
         self.user_id = user_id
         self.user_name = user_name
         self.resize(800, 800)
@@ -31,6 +32,7 @@ class MiniPlayerUI(QMainWindow):
         genres_page = self.genre_selection_page_init()
         artists_page = self.artist_selection_page_init()
         welcome_songs_page = self.welcome_songs_selection_page_init()
+        settings_page = self.settings_page_init()
 
 
         # Основной слой, где будут размещены страницы приложения
@@ -40,6 +42,8 @@ class MiniPlayerUI(QMainWindow):
         self.layout.addWidget(welcome_songs_page)
         self.layout.addWidget(library_page)
         self.layout.addWidget(rec_page)  # Добавить страницу в стек
+        self.layout.addWidget(settings_page)
+
         
 
         if self.db.get_library(self.user_id):
@@ -53,9 +57,19 @@ class MiniPlayerUI(QMainWindow):
         self.central_widget.setLayout(self.layout)
         self.setCentralWidget(self.central_widget)
 
+
     def library_page_init(self):
         self.library_page = QWidget()  # Создаем вторую страницу для библиотеки
         self.library_layout = QVBoxLayout()
+
+        self.settings_layout = QHBoxLayout()
+        self.settings_button = QPushButton()
+        self.settings_button.setIcon(QIcon("gears_icon.png"))
+        self.settings_button.setIconSize(QSize(50, 50))
+        self.settings_button.setStyleSheet("border-style: none")
+
+        self.settings_layout.addStretch()
+        self.settings_layout.addWidget(self.settings_button)
 
         # Создаем список песен
         self.library_songs_list = QListWidget()
@@ -64,8 +78,10 @@ class MiniPlayerUI(QMainWindow):
         self.switch_to_recommendations_button = QPushButton("Перейти на страницу рекомендаций")
         self.switch_to_recommendations_button.setStyleSheet("background-color: darkorange")
         self.switch_to_recommendations_button.clicked.connect(self.switch_page)
+        self.settings_button.clicked.connect(self.to_settings_page)
 
         # Добавляем элементы на макет страницы библиотеки
+        self.library_layout.addLayout(self.settings_layout)
         self.library_layout.addWidget(self.library_songs_list)
         self.library_layout.addWidget(self.switch_to_recommendations_button)
         self.library_page.setLayout(self.library_layout)
@@ -182,6 +198,26 @@ class MiniPlayerUI(QMainWindow):
         return self.welcome_songs_selection_page
 
 
+    def settings_page_init(self):
+        self.settings_page_layout = QVBoxLayout()
+        self.log_out_button = QPushButton("Выйти из аккаунта")
+        self.delete_account_button = QPushButton("Удалить аккаунт")
+        self.back_to_library_button = QPushButton("Назад")
+
+        self.settings_page_layout.addWidget(self.log_out_button)
+        self.settings_page_layout.addWidget(self.delete_account_button)
+        self.settings_page_layout.addStretch()
+        self.settings_page_layout.addWidget(self.back_to_library_button)
+
+        self.back_to_library_button.clicked.connect(self.to_library_page)
+        self.log_out_button.clicked.connect(self.log_out)
+        self.delete_account_button.clicked.connect(self.delete_account)
+
+        self.settings_page = QWidget()
+        self.settings_page.setLayout(self.settings_page_layout)
+
+        return self.settings_page
+
     def fill_genres(self):
         genres = self.db.genres()
         self.genres_list.clear()
@@ -232,14 +268,25 @@ class MiniPlayerUI(QMainWindow):
             self.songs_list.setItemWidget(list_item, track)
 
         self.songs_list.setVisible(True)
-        # Добавляем тестовые песни в список
-        # self.songs_list.addItems(["Песня 1", "Песня 2", "Песня 3"])  # Заглушки для примера
 
+
+    def delete_account(self):
+        self.db.delete_account(self.user_id)
+        self.log_out()
+
+
+    def log_out(self):
+        self.resolver.activate_login()
+        self.hide()
 
     def switch_page(self):
         current_index = self.layout.currentIndex()
         new_index = 3 if current_index == 4 else 4  # Вычисляем индекс новой страницы
         self.set_page(new_index)  # Устанавливаем новую страницу активной
+
+
+    def to_settings_page(self):
+        self.set_page(5)
 
 
     def to_artists_page(self):
@@ -280,6 +327,9 @@ class MiniPlayerUI(QMainWindow):
             self.db.like_songs(self.user_id, self.selected_songs)
             self.populate_library(self.user_id)
             self.set_page(3)
+
+    def to_library_page(self):
+        self.set_page(3)
 
 
     def remove_song(self, title):

@@ -195,6 +195,12 @@ class SqliteAdapter:
         """.format(song_id, user_id))
         return bool(result)
     
+    def delete_account(self, user_id):
+        self.query("""
+            DELETE FROM users
+            WHERE id = {}           
+        """.format(user_id))
+    
     def _int_seq(self, iterable):
         return "({})".format(', '.join(map(str, iterable)))
     

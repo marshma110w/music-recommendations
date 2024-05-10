@@ -4,16 +4,17 @@ from PyQt6.QtWidgets import (QApplication, QMainWindow, QWidget, QVBoxLayout,
                             )
 
 from sqlite_adapter import SqliteAdapter
-from player_ui import MiniPlayerUI
 import re
 
 
 class LoginWindow(QMainWindow):
-    def __init__(self):
+    def __init__(self, resolver):
         super().__init__()
         self.setStyleSheet("background-color: darkkhaki")
 
         self.resize(600, 100)
+
+        self.resolver = resolver
 
         self.db = SqliteAdapter()
 
@@ -196,9 +197,7 @@ class LoginWindow(QMainWindow):
 
     def authorize(self, login):
         user_id = self.db.id_by_login(login)
-        
-        self.player_window = MiniPlayerUI(user_id)
-        self.player_window.show()
+        self.resolver.activate_player(user_id)
         self.hide()
 
     def to_registration(self):
