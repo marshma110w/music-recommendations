@@ -12,7 +12,6 @@ class LoginWindow(QMainWindow):
     def __init__(self):
         super().__init__()
         self.setStyleSheet("background-color: darkkhaki")
-        self.setWindowTitle("Авторизация")
 
         self.resize(600, 100)
 
@@ -26,6 +25,7 @@ class LoginWindow(QMainWindow):
         self.centralWidget = QWidget()
         self.centralWidget.setLayout(self.layout)
         self.setCentralWidget(self.centralWidget)
+        self.to_login()
 
     def construct_login_page(self):
         self.auth_login_label = QLabel("Логин")
@@ -200,9 +200,11 @@ class LoginWindow(QMainWindow):
 
     def to_registration(self):
         self.set_page(1)
+        self.setWindowTitle("Регистрация")
 
     def to_login(self):
         self.set_page(0)
+        self.setWindowTitle("Аутентификация")
 
     def set_page(self, index):
         self.layout.setCurrentIndex(index)
