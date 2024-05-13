@@ -30,6 +30,15 @@ class SqliteAdapter:
                 WHERE l.user_id = '{}'
         """.format(user_id))
     
+    def library_ids(self, user_id):
+        result =  self.query("""
+            SELECT track_id
+            FROM users_tracks_likes
+            WHERE user_id = {}
+        """.format(user_id))
+
+        return [record[0] for record in result]
+    
     def songs_count(self):
         return self.query("""
             SELECT COUNT(*) FROM tracks           
@@ -46,6 +55,7 @@ class SqliteAdapter:
         result = self.query("""
             SELECT user_id, track_id
             FROM users_tracks_likes
+            ORDER BY user_id, track_id
         """)
         for record in result:
             lib[record[0]-1][record[1]-1] = 1
@@ -175,6 +185,13 @@ class SqliteAdapter:
         """.format(id))
 
         return result[0][0]
+    
+    def ids_by_moods(self, moods):
+        result = self.query("""
+            SELECT id FROM tracks WHERE mood IN {}
+        """.format(tuple(moods)))
+
+        return [record[0] for record in result]
     
     def like(self, song_id, user_id):
         self.query("""

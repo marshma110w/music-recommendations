@@ -75,8 +75,6 @@ class ClusterMapper:
         return self.cluster_elements[cluster]
 
 
-
-
 class Art1:
     def __init__(self):
         # Векторы-прототипы - один вектор соответствует одному кластеру
@@ -180,9 +178,6 @@ class Art1:
         right_sige = e.significance() / (self.beta + self.vector_size)
 
         return left_side > right_sige
-    
-    
-    
 
     # Тест на внимательность
     def accuracy_test(self, p: Vector, e: Vector) -> bool:
