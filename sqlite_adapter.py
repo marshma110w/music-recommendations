@@ -189,7 +189,7 @@ class SqliteAdapter:
     def ids_by_moods(self, moods):
         result = self.query("""
             SELECT id FROM tracks WHERE mood IN {}
-        """.format(tuple(moods)))
+        """.format(self._str_seq(moods)))
 
         return [record[0] for record in result]
     

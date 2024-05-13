@@ -5,7 +5,7 @@ from PyQt6.QtWidgets import (QApplication, QMainWindow, QWidget, QVBoxLayout,
 from PyQt6.QtCore import Qt, QSize
 from PyQt6.QtGui import QIcon, QPixmap
 from sqlite_adapter import SqliteAdapter
-from recommendation import Recommendation
+from recommendator import Recommendator
 
 from widgets.track_widget import TrackWidget
 from widgets.genre_widget import GenreWidget
@@ -257,8 +257,8 @@ class MiniPlayerUI(QMainWindow):
         # Обработчик для кнопки создания плейлиста
         # Определите здесь логику создания плейлиста и добавления элементов в список
         moods = self.get_mood()
-        recommendator = Recommendation(moods)
-        rec_ids = recommendator.recommend_playlist(self.user_id - 1, 7)
+        recommendator = Recommendator()
+        rec_ids = recommendator.make_recommendation(self.user_id, 10, moods)
         songs = self.db.tracks_by_ids_for_user(rec_ids, self.user_id)
         self.songs_list.clear()
         for song in songs:
