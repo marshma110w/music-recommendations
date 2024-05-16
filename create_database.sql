@@ -117,9 +117,8 @@ INSERT INTO artists (name, genre_id) VALUES
 ('Joe Satriani',11),
 ('Steve Vai',11),
 ('Yngwie Malmsteen',11);
-
 INSERT INTO tracks (name, artist_id, genre_id) VALUES 
-('Empire State Of Mind', 1, 1),
+("Empire State Of Mind", 1, 1),
 ('99 Problems', 1, 1),
 ('Hard Knock Life', 1, 1),
 ('Holy Grail', 1, 1),
