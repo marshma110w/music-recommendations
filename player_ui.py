@@ -32,7 +32,6 @@ class MiniPlayerUI(QMainWindow):
         genres_page = self.genre_selection_page_init()
         artists_page = self.artist_selection_page_init()
         welcome_songs_page = self.welcome_songs_selection_page_init()
-        settings_page = self.settings_page_init()
 
 
         # Основной слой, где будут размещены страницы приложения
@@ -42,7 +41,6 @@ class MiniPlayerUI(QMainWindow):
         self.layout.addWidget(welcome_songs_page)
         self.layout.addWidget(library_page)
         self.layout.addWidget(rec_page)  # Добавить страницу в стек
-        self.layout.addWidget(settings_page)
 
         
 
@@ -198,26 +196,6 @@ class MiniPlayerUI(QMainWindow):
         return self.welcome_songs_selection_page
 
 
-    def settings_page_init(self):
-        self.settings_page_layout = QVBoxLayout()
-        self.log_out_button = QPushButton("Выйти из аккаунта")
-        self.delete_account_button = QPushButton("Удалить аккаунт")
-        self.back_to_library_button = QPushButton("Назад")
-
-        self.settings_page_layout.addWidget(self.log_out_button)
-        self.settings_page_layout.addWidget(self.delete_account_button)
-        self.settings_page_layout.addStretch()
-        self.settings_page_layout.addWidget(self.back_to_library_button)
-
-        self.back_to_library_button.clicked.connect(self.to_library_page)
-        self.log_out_button.clicked.connect(self.log_out)
-        self.delete_account_button.clicked.connect(self.delete_account)
-
-        self.settings_page = QWidget()
-        self.settings_page.setLayout(self.settings_page_layout)
-
-        return self.settings_page
-
     def fill_genres(self):
         genres = self.db.genres()
         self.genres_list.clear()
@@ -270,15 +248,6 @@ class MiniPlayerUI(QMainWindow):
         self.songs_list.setVisible(True)
 
 
-    def delete_account(self):
-        self.db.delete_account(self.user_id)
-        self.log_out()
-
-
-    def log_out(self):
-        self.resolver.activate_login()
-        self.hide()
-
     def switch_page(self):
         current_index = self.layout.currentIndex()
         new_index = 3 if current_index == 4 else 4  # Вычисляем индекс новой страницы
@@ -286,7 +255,7 @@ class MiniPlayerUI(QMainWindow):
 
 
     def to_settings_page(self):
-        self.set_page(5)
+        self.resolver.activate_settings(self.user_id)
 
 
     def to_artists_page(self):
