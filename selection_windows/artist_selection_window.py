@@ -1,9 +1,9 @@
-from abstract_selection_window import AbstractSelectionWindow
+from base_selection_window import BaseSelectionWindow
 from widgets.artist_widget import ArtistWidget
 from sqlite_adapter import SqliteAdapter
 
 
-class ArtistSelectionWindow(AbstractSelectionWindow):
+class ArtistSelectionWindow(BaseSelectionWindow):
     def widget(self, *args):
         return ArtistWidget(*args)
     
@@ -14,4 +14,4 @@ class ArtistSelectionWindow(AbstractSelectionWindow):
         self.selected = self.collect_selected_ids()
 
     def selection_object(self):
-        return "жанры"
+        return "исполнителей"

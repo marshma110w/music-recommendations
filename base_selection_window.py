@@ -4,15 +4,15 @@ from PyQt6.QtWidgets import (QMainWindow, QWidget, QVBoxLayout,
                             )
 from PyQt6.QtCore import Qt
 
-from abc import abstractmethod
 
-class AbstractSelectionWindow(QMainWindow):
+class BaseSelectionWindow(QMainWindow):
     def __init__(self, user_id, resolver, selected_previous):
         super().__init__()
         self.user_id = user_id
         self.resolver = resolver
         self.selected_previous = selected_previous
         self.resize(600, 800)
+        self.setStyleSheet("background-color: darkkhaki; color: black")
 
         self.selection_layout = QVBoxLayout()
 
@@ -61,18 +61,14 @@ class AbstractSelectionWindow(QMainWindow):
     def back(self):
         self.resolver.previous_window(self)
 
-    @abstractmethod
     def widget(self, *args):
-        pass
+        raise NotImplementedError
 
-    @abstractmethod
     def get_data(self):
-        pass
+        raise NotImplementedError
 
-    @abstractmethod
     def save_data(self):
-        pass
+        raise NotImplementedError
 
-    @abstractmethod
     def selection_object(self):
-        pass
+        raise NotImplementedError

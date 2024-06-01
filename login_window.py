@@ -106,7 +106,7 @@ class LoginWindow(QMainWindow):
         self.reg_layout.addLayout(self.reg_password_layout)
 
         self.reg_password2_layout = QHBoxLayout()
-        self.reg_password2_label = QLabel("Подтверждение")
+        self.reg_password2_label = QLabel("Подтверждение пароля")
         self.reg_password2_label.setStyleSheet("color: black")
         self.reg_password2_input = QLineEdit()
         self.reg_password2_input.setStyleSheet("color: black;background-color: white")

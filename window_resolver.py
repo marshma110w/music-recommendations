@@ -5,7 +5,6 @@ from selection_windows.genre_selection_window import GenreSelectionWindow
 from selection_windows.artist_selection_window import ArtistSelectionWindow
 from selection_windows.track_selection_window import TrackSelectionWindow
 from sqlite_adapter import SqliteAdapter
-from widgets.genre_widget import GenreWidget
 
 WELCOME_WINDOWS = [GenreSelectionWindow, ArtistSelectionWindow, TrackSelectionWindow]
 SELECTED_IDS = [[] for _ in range(len(WELCOME_WINDOWS))]

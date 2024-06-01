@@ -1,9 +1,9 @@
-from abstract_selection_window import AbstractSelectionWindow
+from base_selection_window import BaseSelectionWindow
 from widgets.genre_widget import GenreWidget
 from sqlite_adapter import SqliteAdapter
 
 
-class GenreSelectionWindow(AbstractSelectionWindow):
+class GenreSelectionWindow(BaseSelectionWindow):
     def __init__(self, *args):
         super().__init__(*args)
 

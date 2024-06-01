@@ -1,9 +1,9 @@
-from abstract_selection_window import AbstractSelectionWindow
+from base_selection_window import BaseSelectionWindow
 from widgets.welcome_song_widget import WelcomeSongWidget
 from sqlite_adapter import SqliteAdapter
 
 
-class TrackSelectionWindow(AbstractSelectionWindow):
+class TrackSelectionWindow(BaseSelectionWindow):
     def widget(self, *args):
         return WelcomeSongWidget(*args)
     
@@ -15,4 +15,4 @@ class TrackSelectionWindow(AbstractSelectionWindow):
         SqliteAdapter().like_songs(self.user_id, self.selected)
 
     def selection_object(self):
-        return "жанры"
+        return "песни"
