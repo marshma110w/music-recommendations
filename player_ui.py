@@ -29,25 +29,13 @@ class MiniPlayerUI(QMainWindow):
         # Инициализация страниц
         library_page = self.library_page_init()
         rec_page = self.recommendation_page_init()
-        genres_page = self.genre_selection_page_init()
-        artists_page = self.artist_selection_page_init()
-        welcome_songs_page = self.welcome_songs_selection_page_init()
-
 
         # Основной слой, где будут размещены страницы приложения
         self.layout = QStackedLayout()
-        self.layout.addWidget(genres_page)
-        self.layout.addWidget(artists_page)
-        self.layout.addWidget(welcome_songs_page)
         self.layout.addWidget(library_page)
         self.layout.addWidget(rec_page)  # Добавить страницу в стек
 
-        
-
-        if self.db.get_library(self.user_id):
-            self.set_page(3)
-        else:
-            self.set_page(0)
+        self.set_page(0)
 
 
         # Установить виджет с основным макетом в качестве центрального виджета
@@ -132,69 +120,6 @@ class MiniPlayerUI(QMainWindow):
         self.recommendations_page.setLayout(self.recommendations_layout)
 
         return self.recommendations_page
-    
-    def genre_selection_page_init(self):
-        self.genre_selection_layout = QVBoxLayout()
-        self.genre_selection_title = QLabel("Выберите любимые жанры:")
-        self.genres_list = QListWidget()
-        self.genres_submit_button = QPushButton('К артистам')
-        self.genres_submit_button.setStyleSheet("background-color: darkorange")
-        self.genres_submit_button.clicked.connect(self.to_artists_page)
-        self.fill_genres()
-
-        self.genre_selection_layout.addWidget(self.genre_selection_title)
-        self.genre_selection_layout.addWidget(self.genres_list)
-        self.genre_selection_layout.addWidget(self.genres_submit_button)
-        self.genre_selection_page = QWidget()
-        self.genre_selection_page.setLayout(self.genre_selection_layout)
-
-        return self.genre_selection_page
-    
-    def artist_selection_page_init(self):
-        self.artist_selection_layout = QVBoxLayout()
-        self.artist_selection_title = QLabel("Выберите любимых артистов:")
-        self.artist_selection_back_button = self.back_button()
-        self.artist_selection_title_layout = QHBoxLayout()
-        self.artists_list = QListWidget()
-        self.artists_submit_button = QPushButton('К песням')
-        self.artists_submit_button.setStyleSheet("background-color: darkorange")
-        self.artists_submit_button.clicked.connect(self.to_songs_page)
-
-        self.artist_selection_title_layout.addWidget(self.artist_selection_title)
-        self.artist_selection_title_layout.addStretch()
-        self.artist_selection_title_layout.addWidget(self.artist_selection_back_button)
-        self.artist_selection_layout.addLayout(self.artist_selection_title_layout)
-        self.artist_selection_layout.addWidget(self.artists_list)
-        self.artist_selection_layout.addWidget(self.artists_submit_button)
-        self.artist_selection_page = QWidget()
-        self.artist_selection_page.setLayout(self.artist_selection_layout)
-        self.artists_list.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
-
-        return self.artist_selection_page
-    
-    def welcome_songs_selection_page_init(self):
-        self.welcome_songs_selection_layout = QVBoxLayout()
-        self.welcome_songs_selection_title = QLabel("Выберите любимые треки:")
-        self.welcome_songs_selection_back_button = self.back_button()
-        self.welcome_songs_list = QListWidget()
-        self.welcome_songs_submit_button = QPushButton("Добавить")
-        self.welcome_songs_submit_button.setStyleSheet("background-color: darkorange")
-        self.welcome_songs_submit_button.clicked.connect(self.to_library)
-
-        self.welcome_songs_selection_title_layout = QHBoxLayout()
-        self.welcome_songs_selection_title_layout.addWidget(self.welcome_songs_selection_title)
-        self.welcome_songs_selection_title_layout.addStretch()
-        self.welcome_songs_selection_title_layout.addWidget(self.welcome_songs_selection_back_button)
-    
-        self.welcome_songs_selection_layout.addLayout(self.welcome_songs_selection_title_layout)
-        self.welcome_songs_selection_layout.addWidget(self.welcome_songs_list)
-        self.welcome_songs_selection_layout.addWidget(self.welcome_songs_submit_button)
-        self.welcome_songs_selection_page = QWidget()
-        self.welcome_songs_selection_page.setLayout(self.welcome_songs_selection_layout)
-        self.welcome_songs_list.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
-
-        return self.welcome_songs_selection_page
-
 
     def fill_genres(self):
         genres = self.db.genres()
@@ -250,7 +175,7 @@ class MiniPlayerUI(QMainWindow):
 
     def switch_page(self):
         current_index = self.layout.currentIndex()
-        new_index = 3 if current_index == 4 else 4  # Вычисляем индекс новой страницы
+        new_index = 1 if current_index == 0 else 0  # Вычисляем индекс новой страницы
         self.set_page(new_index)  # Устанавливаем новую страницу активной
 
 

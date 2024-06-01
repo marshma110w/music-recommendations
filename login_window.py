@@ -169,7 +169,7 @@ class LoginWindow(QMainWindow):
             return
         
         self.db.create_user(login, password)
-        self.authorize(login)
+        self.authorize(login, new_user=True)
 
 
     def get_auth_credentials(self):
@@ -195,9 +195,12 @@ class LoginWindow(QMainWindow):
         return bool(pattern.match(password))
     
 
-    def authorize(self, login):
+    def authorize(self, login, new_user=False):
         user_id = self.db.id_by_login(login)
-        self.resolver.activate_player(user_id)
+        if new_user:
+            self.resolver.activate_welcome(user_id)
+        else:
+            self.resolver.activate_player(user_id)
         self.hide()
 
     def to_registration(self):
