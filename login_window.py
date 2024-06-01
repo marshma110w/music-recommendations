@@ -158,6 +158,11 @@ class LoginWindow(QMainWindow):
         if password != password2:
             QMessageBox.warning(self, "Предупреждение", "Пароли не совпадают")
             return
+        
+        if not self.validate_login(login):
+            QMessageBox.warning(self, "Предупреждение", "Логин должен быть от 3 до 15 символов и должен содержать "
+                "буквы латинского алфавита. Также допускаются цифры, подчеркивание, точка или дефис.")
+            return
 
         if not self.validate_password(password):
             QMessageBox.warning(self, "Предупреждение", "Пароль должен быть не менее 8 символов и содержать по крайней мере "
@@ -194,6 +199,9 @@ class LoginWindow(QMainWindow):
         pattern = re.compile(r"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[\S]{8,}$")
         return bool(pattern.match(password))
     
+    def validate_login (self, login):
+        pattern = re.compile(r"^[a-zA-Z0-9_.-]{3,15}$")
+        return bool(pattern.match(login))
 
     def authorize(self, login, new_user=False):
         user_id = self.db.id_by_login(login)
