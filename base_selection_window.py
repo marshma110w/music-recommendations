@@ -1,12 +1,12 @@
 from PyQt6.QtWidgets import (QMainWindow, QWidget, QVBoxLayout, 
                              QPushButton, QListWidget, QLabel,
-                             QListWidgetItem, QHBoxLayout,
+                             QListWidgetItem, QHBoxLayout, QMessageBox
                             )
 from PyQt6.QtCore import Qt
 
 
 class BaseSelectionWindow(QMainWindow):
-    def __init__(self, user_id, resolver, selected_previous):
+    def __init__(self, user_id, resolver, selected_previous=[]):
         super().__init__()
         self.user_id = user_id
         self.resolver = resolver
@@ -30,7 +30,8 @@ class BaseSelectionWindow(QMainWindow):
 
         self.title_layout.addWidget(self.selection_title)
         self.title_layout.addStretch()
-        self.title_layout.addWidget(self.back_button)
+        if self.show_back_button():
+            self.title_layout.addWidget(self.back_button)
         self.selection_layout.addLayout(self.title_layout)
         self.selection_layout.addWidget(self.list)
         self.selection_layout.addWidget(self.submit_button)
@@ -55,11 +56,25 @@ class BaseSelectionWindow(QMainWindow):
         return selected_ids
 
     def submit(self):
+        if not self.collect_selected_ids():
+            error_message_box = QMessageBox()
+            error_message_box.setIcon(QMessageBox.Icon.Warning)
+            error_message_box.setWindowTitle("Ошибка")
+            error_message_box.setText("Ничего не выбрано!")
+            error_message_box.setInformativeText("Выберите один или несколько предложенных вариантов, чтобы продолжить")
+            error_message_box.setStandardButtons(QMessageBox.StandardButton.Ok)
+            error_message_box.setDefaultButton(QMessageBox.StandardButton.Ok)
+            error_message_box.exec()
+            return
+
         self.save_data()
         self.resolver.next_window(self, self.selected)
 
     def back(self):
         self.resolver.previous_window(self)
+
+    def show_back_button(self):
+        return True
 
     def widget(self, *args):
         raise NotImplementedError

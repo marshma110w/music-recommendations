@@ -6,6 +6,10 @@ from sqlite_adapter import SqliteAdapter
 class GenreSelectionWindow(BaseSelectionWindow):
     def __init__(self, *args):
         super().__init__(*args)
+        self.selected_previous = []
+
+    def show_back_button(self):
+        return False
 
     def widget(self, *args):
         return GenreWidget(*args)

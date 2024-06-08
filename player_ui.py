@@ -23,7 +23,6 @@ class MiniPlayerUI(QMainWindow):
 
         self.resolver = resolver
         self.user_id = user_id
-        self.user_name = user_name
         self.resize(800, 800)
 
         # Инициализация страниц
@@ -36,7 +35,6 @@ class MiniPlayerUI(QMainWindow):
         self.layout.addWidget(rec_page)  # Добавить страницу в стек
 
         self.set_page(0)
-
 
         # Установить виджет с основным макетом в качестве центрального виджета
         self.central_widget = QWidget()
@@ -121,44 +119,8 @@ class MiniPlayerUI(QMainWindow):
 
         return self.recommendations_page
 
-    def fill_genres(self):
-        genres = self.db.genres()
-        self.genres_list.clear()
-        for record in genres:
-            list_item = QListWidgetItem(self.genres_list)
-            genre = GenreWidget(record[0], record[1])
-            list_item.setSizeHint(genre.sizeHint())
-            self.genres_list.setItemWidget(list_item, genre)
-
-
-    def fill_artists(self, genres_ids):
-        artists = self.db.artists_by_genres(genres_ids)
-        self.artists_list.clear()
-        for record in artists:
-            list_item = QListWidgetItem(self.artists_list)
-            artist = ArtistWidget(record[0], record[1], record[2])
-            list_item.setSizeHint(artist.sizeHint())
-            self.artists_list.setItemWidget(list_item, artist)
-
-    def fill_songs_to_select(self, artists_ids):
-        songs = self.db.tracks_by_artists(artists_ids)
-        self.welcome_songs_list.clear()
-        for record in songs:
-            list_item = QListWidgetItem(self.welcome_songs_list)
-            song = WelcomeSongWidget(record[0], record[1], record[2], record[3], record[4])
-            list_item.setSizeHint(song.sizeHint())
-            self.welcome_songs_list.setItemWidget(list_item, song)
-
-
-    def make_icon(self, image_path):
-        # Создание иконки для кнопки из изображения
-        image_path = '/home/greeengy/projects/music-recommendations/play.jpeg'
-        pixmap = QPixmap(image_path)
-        return QIcon(pixmap.scaled(80, 80, Qt.AspectRatioMode.KeepAspectRatio, Qt.TransformationMode.SmoothTransformation))
 
     def create_playlist(self):
-        # Обработчик для кнопки создания плейлиста
-        # Определите здесь логику создания плейлиста и добавления элементов в список
         moods = self.get_mood()
         recommendator = Recommendator()
         rec_ids = recommendator.make_recommendation(self.user_id, 10, moods)
@@ -183,32 +145,6 @@ class MiniPlayerUI(QMainWindow):
         self.resolver.activate_settings(self.user_id)
 
 
-    def to_artists_page(self):
-        self.selected_genres = []
-        for item in self.genres_list.findItems('', Qt.MatchFlag.MatchContains):
-            genre = self.genres_list.itemWidget(item)
-            if genre.checked():
-                self.selected_genres.append(genre.id)
-
-        if self.selected_genres:
-            self.fill_artists(self.selected_genres)
-            # self.db.clear_liked_genres(self.user_id)
-            # like genres
-            self.set_page(1)
-
-    def to_songs_page(self):
-        self.selected_artists = []
-        for item in self.artists_list.findItems('', Qt.MatchFlag.MatchContains):
-            artist = self.artists_list.itemWidget(item)
-            if artist.checked():
-                self.selected_artists.append(artist.id)
-
-        if self.selected_artists:
-            self.fill_songs_to_select(self.selected_artists)
-            self.db.clear_liked_artists(self.user_id)
-            # like artists
-            self.set_page(2)
-
     def to_library(self):
         self.selected_songs = []
         for item in self.welcome_songs_list.findItems('', Qt.MatchFlag.MatchContains):
@@ -222,18 +158,6 @@ class MiniPlayerUI(QMainWindow):
             self.populate_library(self.user_id)
             self.set_page(3)
 
-    def to_library_page(self):
-        self.set_page(3)
-
-
-    def remove_song(self, title):
-        # Находим элементы в списке, сопоставляемые с названием и удаляем их
-        items = self.library_songs_list.findItems(title, Qt.MatchFlag.MatchExactly)
-        if not items:
-            return
-        for item in items:
-            row = self.library_songs_list.row(item)
-            self.library_songs_list.takeItem(row)
 
     def populate_library(self, login):
         self.library_songs_list.clear()
@@ -245,18 +169,10 @@ class MiniPlayerUI(QMainWindow):
 
             self.library_songs_list.setItemWidget(list_item, track)
 
-    def back_button(self):
-        back_button = QPushButton("Назад")
-        back_button.setStyleSheet("background-color: darkorange")
-        back_button.clicked.connect(self.back_page)
-        return back_button
-
-    def back_page(self):
-        cur_index = self.layout.currentIndex()
-        self.layout.setCurrentIndex(cur_index - 1)
 
     def get_mood(self):
         return [button.text() for button in self.mood_buttons if button.isChecked()]
+
 
     def set_page(self, index):
         if index == 3:

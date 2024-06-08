@@ -25,7 +25,7 @@ class WindowResolver:
 
     def activate_welcome(self, user_id):
         self.user_id = user_id
-        self.next_welcome_window = WELCOME_WINDOWS[0](user_id, self, [])
+        self.next_welcome_window = WELCOME_WINDOWS[0](user_id, self)
         self.next_welcome_window.show()
 
     def activate_settings(self, user_id):
@@ -39,13 +39,13 @@ class WindowResolver:
                 window_id = i
                 break
 
-        SELECTED_IDS[i] = selected
+        SELECTED_IDS[window_id] = selected
         
         current.hide()
         if window_id == len(WELCOME_WINDOWS) -1:
             self.activate_player(self.user_id)
         else:
-            self.next_welcome_window = WELCOME_WINDOWS[i+1](self.user_id, self, selected)
+            self.next_welcome_window = WELCOME_WINDOWS[window_id+1](self.user_id, self, selected)
             self.next_welcome_window.show()
 
     def previous_window(self, current):
@@ -58,7 +58,12 @@ class WindowResolver:
         current.hide()
         if window_id == 0:
             self.activate_login()
+            return
         else:
-            selected = SELECTED_IDS[i-1]
-            self.next_welcome_window = WELCOME_WINDOWS[i-1](self.user_id, self, selected)
+            if window_id == 1:
+                selected = []
+            else:
+                selected = SELECTED_IDS[window_id-2]
+            
+            self.next_welcome_window = WELCOME_WINDOWS[window_id-1](self.user_id, self, selected)
             self.next_welcome_window.show()
