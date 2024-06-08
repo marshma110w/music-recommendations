@@ -16,6 +16,9 @@ class Recommendator:
 
     def make_recommendation(self, user_id, amount, moods = []):
         neighbours = self.cluster_neighbours(user_id)
+        if not neighbours:
+            print(self.art1.cluster_mapper.cluster_elements)
+            raise ValueError("Пользователь один в своем кластере! Алгоритм не сошелся")
         sum_vector = self.sum_vector(neighbours)
         sum_vector = list(enumerate(sum_vector))
 

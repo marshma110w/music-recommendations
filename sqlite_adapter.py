@@ -175,7 +175,7 @@ class SqliteAdapter:
 
     def moods(self):
         result = self.query("""
-            SELECT DISTINCT mood FROM tracks                    
+            SELECT name FROM moods                    
         """)
         return [row[0] for row in result]
     
@@ -188,7 +188,9 @@ class SqliteAdapter:
     
     def ids_by_moods(self, moods):
         result = self.query("""
-            SELECT id FROM tracks WHERE mood IN {}
+            SELECT tracks.id
+            FROM tracks JOIN moods ON tracks.mood_id = moods.id
+            WHERE moods.name IN {}
         """.format(self._str_seq(moods)))
 
         return [record[0] for record in result]

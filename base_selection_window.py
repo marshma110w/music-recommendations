@@ -4,6 +4,8 @@ from PyQt6.QtWidgets import (QMainWindow, QWidget, QVBoxLayout,
                             )
 from PyQt6.QtCore import Qt
 
+from sqlite_adapter import SqliteAdapter
+
 
 class BaseSelectionWindow(QMainWindow):
     def __init__(self, user_id, resolver, selected_previous=[]):
@@ -72,6 +74,12 @@ class BaseSelectionWindow(QMainWindow):
 
     def back(self):
         self.resolver.previous_window(self)
+
+    # Срабатывает при закрытии окна
+    # Нужно удалить зарегистрированного пользователя, иначе он будет пустой (без лайков)
+    def closeEvent(self, event):
+        SqliteAdapter().delete_account(self.user_id)
+        event.accept()
 
     def show_back_button(self):
         return True

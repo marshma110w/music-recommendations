@@ -87,10 +87,10 @@ class Art1:
         self.cluster_mapper = ClusterMapper()
         
         # Параметр "Разрушения связи"
-        self.beta = 1.0
+        self.beta = 2.0
 
         # Параметр "Внимательность"
-        self.rho = 0.8
+        self.rho = 0.4
 
         # Параметр "Размер веторов" - будет инициализирован позже
         self.vector_size = None
