@@ -155,8 +155,7 @@ class MiniPlayerUI(QMainWindow):
         if self.selected_songs:
             self.db.clear_liked_songs(self.user_id)
             self.db.like_songs(self.user_id, self.selected_songs)
-            self.populate_library(self.user_id)
-            self.set_page(3)
+            self.set_page(1)
 
 
     def populate_library(self, login):
@@ -175,7 +174,7 @@ class MiniPlayerUI(QMainWindow):
 
 
     def set_page(self, index):
-        if index == 3:
+        if index == 0:
             self.populate_library(self.user_id)
 
         self.layout.setCurrentIndex(index)
