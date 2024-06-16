@@ -61,6 +61,7 @@ class BaseSelectionWindow(QMainWindow):
         if not self.collect_selected_ids():
             error_message_box = QMessageBox()
             error_message_box.setIcon(QMessageBox.Icon.Warning)
+            error_message_box.setStyleSheet("background-color: darkkhaki; color: black")
             error_message_box.setWindowTitle("Ошибка")
             error_message_box.setText("Ничего не выбрано!")
             error_message_box.setInformativeText("Выберите один или несколько предложенных вариантов, чтобы продолжить")

@@ -23,8 +23,11 @@ class SettingsWindow(QMainWindow):
 
         self.layout = QVBoxLayout()
         self.log_out_button = QPushButton("Выйти из аккаунта")
+        self.log_out_button.setStyleSheet("background-color: darkorange; color: black")
         self.delete_account_button = QPushButton("Удалить аккаунт")
+        self.delete_account_button.setStyleSheet("background-color: darkorange; color: black")
         self.back_to_library_button = QPushButton("Назад")
+        self.back_to_library_button.setStyleSheet("background-color: darkorange; color: black")
 
         self.layout.addWidget(self.log_out_button)
         self.layout.addWidget(self.delete_account_button)
